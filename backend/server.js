@@ -1,10 +1,15 @@
 const express = require("express");
 const cors = require("cors");
+
 const db = require("./mysql");
 
 const app = express();
 app.use(cors());
 app.use(express.json()); // Parse JSON data
+
+const PORT = 5000;
+
+
 
 // Sample route to get all users
 app.get("/users", (req, res) => {
@@ -27,5 +32,68 @@ app.post("/users", (req, res) => {
   });
 });
 
-const PORT = 5000;
+
+
+//sample routr to get car component to sql database
+app.get("/cars", (req, res) => {
+  db.query("SELECT * FROM cars", (err, result) => {
+    if (err) {
+      return res.status(500).json({ error: err.message });
+    }
+    res.json(result); // Send data as JSON response
+  });
+});
+//sample route to get reviews for cars
+app.get("/reviews", (req, res) => {
+  db.query("SELECT * FROM reviews", (err, result) => {
+    if (err) {
+      return res.status(500).json({ error: err.message });
+    }
+    res.json(result); // Send data as JSON response
+  });
+});
+
+
+// Signup Route
+app.post("/signup", (req, res) => {
+  const { full_name, email, password_hash, phone, address } = req.body;
+
+  if (!full_name || !email || !password_hash || !phone || !address) {
+    return res.status(400).send("All fields are required.");
+  }
+
+  const query = "INSERT INTO users (full_name, email, password_hash, phone, address) VALUES (?, ?, ?, ?, ?)";
+  db.query(query, [full_name, email, password_hash, phone, address], (err, result) => {
+    if (err) {
+      console.error("Insert query error:", err);
+      return res.status(500).send("Error signing up");
+    }
+    res.status(200).send("Signup successful");
+  });
+});
+
+
+// Login Route
+app.post("/login", (req, res) => {
+  const { email, password } = req.body;
+
+  db.query("SELECT * FROM users WHERE email = ?", [email], (err, results) => {
+    if (err) return res.status(500).json({ error: err.message });
+
+    if (results.length === 0) {
+      return res.status(400).json({ error: "Invalid email or password" });
+    }
+
+    // Compare password with password_hash column
+    if (password !== results[0].password_hash) {
+      return res.status(400).json({ error: "Invalid email or password" });
+    }
+
+    res.json({ message: "Login successful", userId: results[0].user_id });
+  });
+});
+
+
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+
