@@ -40,7 +40,7 @@ export default function Navbar() {
         </div>
         <div className="car-rent">
           <Link to="/Post-car">Post car🚗</Link>
-        </div>
+        </div> 
         <div className="car-book">
           <Link to="/profile">Profile👤</Link>
         </div>

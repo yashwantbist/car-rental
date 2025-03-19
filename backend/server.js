@@ -92,7 +92,35 @@ app.post("/login", (req, res) => {
     res.json({ message: "Login successful", userId: results[0].user_id });
   });
 });
+//payment form page
+//post for payment page
+app.post("/payment", (req, res) => {
+  const { name, address, email, cardType, cardNumber, expDate, cvv } = req.body;
 
+  if (!name || !address || !email || !cardType || !cardNumber || !expDate || !cvv) {
+    return res.status(400).json({ message: "All fields are required." });
+  }
+
+  const query = "INSERT INTO payments (name, address, email, cardType, cardNumber, expDate, cvv) VALUES (?, ?, ?, ?, ?, ?, ?)";
+  db.query(query, [name, address, email, cardType, cardNumber, expDate, cvv], (err, result) => {
+    if (err) {
+      console.error("Error inserting payment:", err);
+      return res.status(500).json({ message: "Payment failed." });
+    }
+    res.json({ message: "Payment successful!", paymentId: result.insertId });
+  });
+});
+
+//get payment form
+app.get("/payments", (req, res) => {
+  db.query("SELECT * FROM payments", (err, results) => {
+    if (err) {
+      console.error("Error fetching payments:", err);
+      return res.status(500).json({ message: "Failed to retrieve payments." });
+    }
+    res.json(results);
+  });
+});
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 

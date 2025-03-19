@@ -1,7 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import PropTypes from "prop-types";
-import Navbar from "../Components/Navbar";
+
 
 
 const Login = ({ setPage }) => {
@@ -25,7 +25,7 @@ const Login = ({ setPage }) => {
 
   return (
     <div>
-        <Navbar />
+       
       <h2>Login</h2>
       <form onSubmit={handleLogin}>
         <input
