@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import CarDetailPage from "./pages/CarDetailPage";
 import Login from "./pages/LoginPage";
+import SignUp from "./pages/SignUpPage";
 import CarPostingPage from "./pages/CarPostingPage";
 import Profile from "./pages/ProfilePage";
 import Chat from "./pages/ChatPage";
@@ -17,6 +18,8 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/cardetail/:carId" element={<CarDetailPage />} />
         <Route path="/signin" element={<Login />} />
+        <Route path="/signup" element={<SignUp />} />
+
         <Route path="/post-car" element={<CarPostingPage />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/chat" element={<Chat />} />
